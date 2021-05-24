@@ -42,7 +42,7 @@ form:
     create_git_helptext: 'If you skip this, you can always configure this later in project settings.'
     create_git_checkbox_label: 'Connect a repository to this project'
     button: 'Create project'
-  project_settings:
+  project_git_settings:
     git_title: 'Git settings'
     git_source_url_label: 'Git Source URL'
     git_source_ref_label: 'Git Ref'
@@ -67,6 +67,19 @@ form:
     hcl_content_helptext: 'Paste or edit your waypoint configuration here to store it on the server'
     hcl_content_label: 'waypoint.hcl file'
     button: 'Apply'
+  project_variables_settings:
+    title: 'Input Variable'
+    variable_name: 'Variable name'
+    variable_name_placeholder: 'var_name'
+    variable_value: 'Value'
+    variable_value_placeholder: 'var_value'
+    button_submit: 'Save variable'
+    button_cancel: 'Cancel'
+
+
+
+
+
 
 auth:
   title: 'Welcome to Waypoint'
