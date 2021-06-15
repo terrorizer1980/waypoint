@@ -143,6 +143,7 @@ func New(opts ...Option) (pb.WaypointServer, error) {
 	// Each item should implement the pollHandler interface
 	pollableItems := map[string]pollHandler{
 		"project": &projectPoll{state: s.state},
+		//"application_statusreport": &applicationPoll{state: s.state, workspace: "default"},
 	}
 
 	// Start our polling background goroutines.
