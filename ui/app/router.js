@@ -7,6 +7,7 @@ export default class Router extends EmberRouter {
 }
 
 Router.map(function () {
+  this.route('sandbox');
   this.route('auth', function () {
     this.route('invite');
     this.route('token');

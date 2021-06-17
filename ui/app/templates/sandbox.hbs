@@ -1,0 +1,68 @@
+<div style="display: flex; flex-direction: column; gap: 16px;">
+
+  {{#each
+    (array
+      (hash healthStatus="UNKNOWN")
+      (hash healthStatus="ALIVE")
+      (hash healthStatus="READY")
+      (hash healthStatus="DOWN")
+      (hash healthStatus="PARTIAL")
+    )
+    as |vars|
+  }}
+
+    <div style="display: flex; gap: 4px;">
+      <Pds::Icon @type="logo-kubernetes-color-alt" class="icon" />
+      <StatusReportIndicator
+        @statusReport={{hash
+          id="status-report-1"
+          status=(hash
+            state=2
+            details="Example status details"
+            error=null
+            startTime=(hash seconds=1609455600 nanos=0)
+            completeTime=(hash seconds=1609455660 nanos=0)
+          )
+          health=(hash
+            healthStatus=vars.healthStatus
+            healthMessage="Example health message"
+            name="Example health name"
+            id="health-1"
+          )
+          resourcesHealthList=(array)
+        }}
+      />
+    </div>
+
+  {{/each}}
+
+  {{#each 
+    (array
+      (hash state=0)
+      (hash state=1)
+      (hash state=2)
+      (hash
+        state=3
+        error=(hash
+          code=127
+          message="Example error message"
+          detailsList=(array "Example detail")
+        )
+      )
+    )
+    as |vars|
+  }}
+    <div style="display: flex">
+      <OperationStatusIndicator
+        @status={{hash
+          state=vars.state
+          details="Example details"
+          error=vars.error
+          startTime=(hash seconds=1609455600 nanos=0)
+          completeTime=(hash seconds=1609455660 nanos=0)
+        }}
+      />
+    </div>
+  {{/each}}
+
+</div>
