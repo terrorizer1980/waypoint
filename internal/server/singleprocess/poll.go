@@ -77,6 +77,7 @@ func (s *service) runPollQueuer(
 		var loopCtxCancel context.CancelFunc
 		loopCtx := ctx
 		if !pollTime.IsZero() {
+			log.Trace("next poll time", "time", pollTime)
 			loopCtx, loopCtxCancel = context.WithDeadline(ctx, pollTime)
 		}
 
