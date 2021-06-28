@@ -717,14 +717,14 @@ message DeclaredResource {
   string platform = 2;
 
   // Internal ResourceManager representation of the resource.
-  google.protobuf.Any resource_state = 3;
+  google.protobuf.Any state = 3;
 
   // Any additional information a plugin wants to expose on this resource.
   // EX: Availability zones on a load balancer, concurrency limit on a lambda function, etc.
   string state_json = 4;
 
   // high level type of the resource, used for display purposes.
-  ResourceCategoryDisplayHint resource_category_display_hint = 5;
+  ResourceCategoryDisplayHint category_display_hint = 5;
 
 }
 
@@ -2113,7 +2113,7 @@ message Deployment {
   }
 
   // Resources that this deployment has created or manages.
-  repeated DeclaredResource declaredResources = 19;
+  repeated DeclaredResource declared_resources = 19;
 
   // This is the populated preload data. Most of this data can be retrieved
   // through additional API calls or manually computed, but certain API
@@ -2336,7 +2336,7 @@ message Release {
   string job_id = 13;
 
   // A platform resource that this release has created, depends on, or manages.
-  repeated DeclaredResource declaredResources = 19;
+  repeated DeclaredResource declared_resources = 19;
 
   // This is the populated preload data. Most of this data can be retrieved
   // through additional API calls or manually computed, but certain API
@@ -2470,9 +2470,8 @@ message StatusReport {
   // Copied from the plugin generated raw SDK status report for convenient API access.
   Health health = 8;
 
-  // Old field - a health report of all of the resources that make up the report.
+  // A health report of all of the resources that make up the report.
   // Copied from the plugin generated raw SDK status report for convenient API access.
-  // Health of resources can now be found on the resources repeated message
   repeated Health resources_health = 9;
 
   // the time when this report was generated
@@ -2507,7 +2506,7 @@ message StatusReport {
     string type = 6;
 
     // A link directly to the resource in the platform, if applicable.
-    string platform_resource_url = 7;
+    string platform_url = 7;
 
     // The high level category of the resource, used as a hint to the UI on how to display the resource.
     ResourceCategoryDisplayHint category_display_hint = 8;
