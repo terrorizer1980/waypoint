@@ -468,6 +468,7 @@ func (p *Platform) Deploy(
 	job *component.JobInfo,
 	img *Image,
 	deployConfig *component.DeploymentConfig,
+	declaredResourcesResp *component.DeclaredResourcesResp,
 	ui terminal.UI,
 ) (*Deployment, error) {
 	// We'll update the user in real time
@@ -511,6 +512,15 @@ func (p *Platform) Deploy(
 	s.Done()
 
 	result.Container = crState.Id
+
+	//Add our experimental declared resource
+	declaredResource := sdk.DeclaredResource{
+		Type: "container",
+		Platform: "docker",
+		CategoryDisplayHint: sdk.ResourceCategoryDisplayHint_INSTANCE,
+	}
+	declaredResourcesResp.DeclaredResources = append(declaredResourcesResp.DeclaredResources, &declaredResource)
+
 	return &result, nil
 }
 

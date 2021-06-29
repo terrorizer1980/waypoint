@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"reflect"
 	"strings"
 
 	"github.com/golang/protobuf/proto"
@@ -15,6 +16,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/hashicorp/waypoint-plugin-sdk/component"
+	sdkproto "github.com/hashicorp/waypoint-plugin-sdk/proto/gen"
 	"github.com/hashicorp/waypoint/internal/config"
 	pb "github.com/hashicorp/waypoint/internal/server/gen"
 )
@@ -313,13 +315,43 @@ func (op *deployOperation) Do(ctx context.Context, log hclog.Logger, app *App, m
 		return nil, err
 	}
 
+	// NOTE(izaak): We to this to satisfy argmamper - because the Deploy function asks for this,
+	// we need to prove to argmapper that we can supply one. We'll swap this out
+	// with a different pointer on the plugin side. This one doesn't end up being used for anything.
+	declaredResourcesResp := &component.DeclaredResourcesResp{}
+
+	var args []argmapper.Arg
+	args = append(args, argmapper.Typed(declaredResourcesResp))
+	args = append(args, op.args()...)
+
 	val, err := app.callDynamicFunc(ctx,
 		log,
 		(*component.Deployment)(nil),
 		op.component,
 		op.component.Value.(component.Platform).DeployFunc(),
-		op.args()...,
+		args...
 	)
+
+	// NOTE(izaak): Unfortunately, the returned type here is an waypoint-plugin-sdk/internal/plugioncomponent/Deployment,
+	// and because it's internal we can't cast to it. This is similar to how we're getting TemplateData
+	// (https://github.com/hashicorp/waypoint-plugin-sdk/blob/eda7ae600c2d69ba042ecac4d6d9333d37f6fd9d/docs/func.go#L106),
+	// but it still doesn't feel great.
+	pluginDeclaredResources := reflect.ValueOf(val).Elem().FieldByName("DeclaredResources").Interface().([]*sdkproto.DeclaredResource)
+
+
+	// Convert from the plugin declaredResources to server declaredResources. Should be identical.
+	declaredResources := make([]*pb.DeclaredResource, len(pluginDeclaredResources))
+	for i, resource := range pluginDeclaredResources {
+		declaredResources[i] = &pb.DeclaredResource{
+			Type: resource.Type,
+			Platform: resource.Platform,
+			State: resource.State,
+			StateJson: resource.StateJson,
+			CategoryDisplayHint: pb.ResourceCategoryDisplayHint(resource.CategoryDisplayHint.Number()),
+		}
+	}
+
+	deploy.DeclaredResources = declaredResources
 
 	if ep, ok := op.component.Value.(component.Execer); ok && ep.ExecFunc() != nil {
 		log.Debug("detected deployment uses an exec plugin, decorating deployment with info")
