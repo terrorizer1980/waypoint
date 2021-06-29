@@ -515,8 +515,8 @@ func (p *Platform) Deploy(
 
 	//Add our experimental declared resource
 	declaredResource := sdk.DeclaredResource{
-		Type: "container",
-		Platform: "docker",
+		Type:                "container",
+		Platform:            "docker",
 		CategoryDisplayHint: sdk.ResourceCategoryDisplayHint_INSTANCE,
 	}
 	declaredResourcesResp.DeclaredResources = append(declaredResourcesResp.DeclaredResources, &declaredResource)

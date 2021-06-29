@@ -329,7 +329,7 @@ func (op *deployOperation) Do(ctx context.Context, log hclog.Logger, app *App, m
 		(*component.Deployment)(nil),
 		op.component,
 		op.component.Value.(component.Platform).DeployFunc(),
-		args...
+		args...,
 	)
 
 	// NOTE(izaak): Unfortunately, the returned type here is an waypoint-plugin-sdk/internal/plugioncomponent/Deployment,
@@ -338,15 +338,14 @@ func (op *deployOperation) Do(ctx context.Context, log hclog.Logger, app *App, m
 	// but it still doesn't feel great.
 	pluginDeclaredResources := reflect.ValueOf(val).Elem().FieldByName("DeclaredResources").Interface().([]*sdkproto.DeclaredResource)
 
-
 	// Convert from the plugin declaredResources to server declaredResources. Should be identical.
 	declaredResources := make([]*pb.DeclaredResource, len(pluginDeclaredResources))
 	for i, resource := range pluginDeclaredResources {
 		declaredResources[i] = &pb.DeclaredResource{
-			Type: resource.Type,
-			Platform: resource.Platform,
-			State: resource.State,
-			StateJson: resource.StateJson,
+			Type:                resource.Type,
+			Platform:            resource.Platform,
+			State:               resource.State,
+			StateJson:           resource.StateJson,
 			CategoryDisplayHint: pb.ResourceCategoryDisplayHint(resource.CategoryDisplayHint.Number()),
 		}
 	}
