@@ -336,7 +336,12 @@ func (op *deployOperation) Do(ctx context.Context, log hclog.Logger, app *App, m
 	// and because it's internal we can't cast to it. This is similar to how we're getting TemplateData
 	// (https://github.com/hashicorp/waypoint-plugin-sdk/blob/eda7ae600c2d69ba042ecac4d6d9333d37f6fd9d/docs/func.go#L106),
 	// but it still doesn't feel great.
-	pluginDeclaredResources := reflect.ValueOf(val).Elem().FieldByName("DeclaredResources").Interface().([]*sdkproto.DeclaredResource)
+	var pluginDeclaredResources []*sdkproto.DeclaredResource
+	pluginDeclaredResourcesField := reflect.ValueOf(val).Elem().FieldByName("DeclaredResources")
+	// This check fails during tests when the return val for deployments is mocked, or potentially when using an old plugin.
+	if pluginDeclaredResourcesField.IsValid() {
+		pluginDeclaredResources = pluginDeclaredResourcesField.Interface().([]*sdkproto.DeclaredResource)
+	}
 
 	// Convert from the plugin declaredResources to server declaredResources. Should be identical.
 	declaredResources := make([]*pb.DeclaredResource, len(pluginDeclaredResources))
