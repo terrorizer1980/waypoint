@@ -20,13 +20,13 @@
     "@hashicorp/react-subnav": "8.1.0",
     "@hashicorp/react-tabs": "6.0.1",
     "@hashicorp/react-vertical-text-block-list": "6.0.2",
-    "next": "10.0.6",
+    "next": "10.0.8",
     "next-mdx-remote": "3.0.1",
     "nuka-carousel": "4.7.5",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-intersection-observer": "8.31.0",
-    "semver": "7.3.4"
+    "semver": "7.5.2"
   },
   "devDependencies": {
     "@types/node": "^14.14.40",
