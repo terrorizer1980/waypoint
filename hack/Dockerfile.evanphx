@@ -23,7 +23,7 @@ RUN apk add --no-cache make
 RUN go get github.com/kevinburke/go-bindata/...
 RUN --mount=type=cache,target=/root/.cache/go-build make bin
 
-FROM alpine
+FROM alpine:3.18.3
 
 COPY --from=builder /tmp/wp-src/waypoint /usr/bin/waypoint
 
